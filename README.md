@@ -1,46 +1,54 @@
 <div align="center">
 
-# millen.sh
+<img src="./public/favicon.svg" alt="Logo" width="80" height="80">
 
-My personal portfolio website.
+# Millen Singh
 
-[![Live Demo](https://img.shields.io/badge/Live-millen.sh-0ea5e9?style=for-the-badge)](https://millen.sh)
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org/)
+**Software Developer** · Northern Ireland
+
+[![Portfolio](https://img.shields.io/badge/millen.sh-000?style=for-the-badge&logo=vercel&logoColor=white)](https://millen.sh)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/singhmillen)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/milnee)
 
 </div>
 
----
+<br>
 
-![Portfolio Preview](./public/preview.png)
+<div align="center">
+<img src="./public/preview.png" alt="Portfolio Preview" width="100%" style="border-radius: 12px;">
+</div>
 
-<details>
-<summary>Light Mode</summary>
-
-![Light Mode](./public/preview-light.png)
-
-</details>
-
-## Features
-
-- **Particle Background** - Interactive particles that connect on hover
-- **Card Spotlight** - Cursor-following glow effect on cards
-- **Scroll Animations** - Elements animate in as you scroll
-- **Magnetic Buttons** - Buttons subtly pull toward cursor
-- **Dark/Light Theme** - Toggle with smooth transitions
-- **CV Viewer** - View and download resume as PDF
-- **Responsive** - Works on all devices
+<br>
 
 ## Tech Stack
 
-| Technology | Purpose |
-|------------|---------|
-| Next.js 16 | Framework |
-| React 19 | UI Library |
-| TypeScript | Type Safety |
-| Tailwind CSS | Styling |
+<div align="center">
 
-## Run Locally
+![Next.js](https://img.shields.io/badge/Next.js_16-000?style=flat-square&logo=next.js)
+![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
+
+</div>
+
+## Features
+
+| Feature | Description |
+|---------|-------------|
+| Particles | Interactive background with connecting nodes |
+| Spotlight | Cursor-following glow on cards |
+| Animations | Scroll-triggered fade-in effects |
+| Magnetic | Buttons attract toward cursor |
+| Themes | Dark/light mode with persistence |
+| CV | View and download resume |
+
+<details>
+<summary><strong>Light Mode Preview</strong></summary>
+<br>
+<img src="./public/preview-light.png" alt="Light Mode" width="100%">
+</details>
+
+## Quick Start
 
 ```bash
 git clone https://github.com/milnee/Portfolio.git
@@ -49,19 +57,16 @@ npm install
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000)
-
 ## Contact
 
-- **Email** - millensh@outlook.com
-- **LinkedIn** - [@singhmillen](https://linkedin.com/in/singhmillen)
-- **GitHub** - [@milnee](https://github.com/milnee)
-- **X** - [@m1lles05](https://twitter.com/m1lles05)
+<div align="center">
+
+**millensh@outlook.com**
+
+</div>
 
 ---
 
 <div align="center">
-
-**[millen.sh](https://millen.sh)**
-
+<sub>Built with Next.js and deployed on Vercel</sub>
 </div>
