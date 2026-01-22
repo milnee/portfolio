@@ -14,6 +14,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Millen",
+  icons: {
+    icon: "/favicon.svg",
+  },
   description: "Second-year Computer Science student at Ulster University seeking placement opportunities. Passionate about building web applications with React, Next.js, and TypeScript.",
   keywords: ["Millen Singh", "Software Developer", "Portfolio", "Ulster University", "React", "Next.js", "TypeScript", "Web Developer"],
   authors: [{ name: "Millen Singh" }],
