@@ -167,7 +167,7 @@ export default function Home() {
     e.currentTarget.style.transform = "translate(0, 0)";
   }, []);
 
-  const handleCardSpotlight = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+  const handleCardSpotlight = useCallback((e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
