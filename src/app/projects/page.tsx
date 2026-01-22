@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
 
-const projects: {
+type Project = {
   title: string;
   description: string;
   tech: string[];
@@ -13,7 +13,13 @@ const projects: {
   github?: string;
   features: string[];
   longDescription: string;
-}[] = [
+  status: "active" | "completed";
+  date: string;
+  featured?: boolean;
+  repoName?: string;
+};
+
+const projects: Project[] = [
   {
     title: "Portfolio Website",
     description: "Personal portfolio built with Next.js 16, React 19, and TypeScript. Features particle effects, card spotlight, magnetic buttons, and dark/light mode.",
@@ -22,6 +28,7 @@ const projects: {
     image: "/preview.png",
     link: "https://millen.sh",
     github: "https://github.com/milnee/Portfolio",
+    repoName: "milnee/Portfolio",
     longDescription: "A modern, responsive portfolio website showcasing my projects and skills. Built with the latest web technologies and featuring interactive visual effects.",
     features: [
       "Interactive particle background with mouse tracking",
@@ -31,6 +38,9 @@ const projects: {
       "Dark/light theme with persistence",
       "Fully responsive design",
     ],
+    status: "active",
+    date: "Jan 2026",
+    featured: true,
   },
   {
     title: "Minecraft Utils Plugin",
@@ -39,6 +49,7 @@ const projects: {
     color: "from-orange-500 to-red-600",
     image: "/projects/minecraft.svg",
     github: "https://github.com/milnee/Utils",
+    repoName: "milnee/Utils",
     longDescription: "A comprehensive utility plugin for Minecraft servers that provides essential commands and features for server administrators and players.",
     features: [
       "/speed command with configurable speed levels",
@@ -48,6 +59,8 @@ const projects: {
       "MongoDB support for flexible data storage",
       "Configurable via config.yml",
     ],
+    status: "completed",
+    date: "Dec 2025",
   },
   {
     title: "FiveM MaxAmmo",
@@ -56,6 +69,7 @@ const projects: {
     color: "from-purple-500 to-pink-600",
     image: "/projects/maxammo.svg",
     github: "https://github.com/milnee/MaxAmmo",
+    repoName: "milnee/MaxAmmo",
     longDescription: "A QBCore framework script for FiveM roleplay servers that allows authorized players to refill their ammunition instantly.",
     features: [
       "/maxammo command to refill all ammo",
@@ -64,6 +78,8 @@ const projects: {
       "Server-side validation",
       "Clean notification system",
     ],
+    status: "completed",
+    date: "Nov 2025",
   },
   {
     title: "FiveM MaxArmor",
@@ -72,6 +88,7 @@ const projects: {
     color: "from-violet-500 to-purple-600",
     image: "/projects/maxarmor.svg",
     github: "https://github.com/milnee/MaxArmor",
+    repoName: "milnee/MaxArmor",
     longDescription: "A QBCore framework script for FiveM servers that provides armor management with admin controls and player targeting capabilities.",
     features: [
       "/maxarmor command for instant armor",
@@ -80,15 +97,45 @@ const projects: {
       "Current armor level checking",
       "Client-side and server-side logic",
     ],
+    status: "completed",
+    date: "Nov 2025",
   },
 ];
 
 export default function ProjectsPage() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [githubStats, setGithubStats] = useState<Record<string, { stars: number; forks: number }>>({});
   const spotlightRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const featuredProject = projects.find(p => p.featured);
+  const otherProjects = projects.filter(p => !p.featured);
+
+  useEffect(() => {
+    const fetchGithubStats = async () => {
+      const stats: Record<string, { stars: number; forks: number }> = {};
+      for (const project of projects) {
+        if (project.repoName) {
+          try {
+            const res = await fetch(`https://api.github.com/repos/${project.repoName}`);
+            if (res.ok) {
+              const data = await res.json();
+              stats[project.repoName] = {
+                stars: data.stargazers_count || 0,
+                forks: data.forks_count || 0,
+              };
+            }
+          } catch {
+            stats[project.repoName] = { stars: 0, forks: 0 };
+          }
+        }
+      }
+      setGithubStats(stats);
+    };
+    fetchGithubStats();
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem("theme") as "dark" | "light" | null;
@@ -143,27 +190,37 @@ export default function ProjectsPage() {
     let animationId: number;
     let particles: { x: number; y: number; vx: number; vy: number; size: number }[] = [];
     let mouse = { x: 0, y: 0 };
+    let lastTime = 0;
+    const fps = 30;
+    const frameInterval = 1000 / fps;
 
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      createParticles();
     };
 
     const createParticles = () => {
       particles = [];
-      const count = Math.floor((canvas.width * canvas.height) / 15000);
+      const count = Math.min(Math.floor((canvas.width * canvas.height) / 25000), 60);
       for (let i = 0; i < count; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          size: Math.random() * 2 + 1,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          size: Math.random() * 1.5 + 0.5,
         });
       }
     };
 
-    const animate = () => {
+    const animate = (currentTime: number) => {
+      animationId = requestAnimationFrame(animate);
+
+      const deltaTime = currentTime - lastTime;
+      if (deltaTime < frameInterval) return;
+      lastTime = currentTime - (deltaTime % frameInterval);
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const isDark = theme === "dark";
 
@@ -175,35 +232,36 @@ export default function ProjectsPage() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = isDark ? "rgba(14, 165, 233, 0.5)" : "rgba(2, 132, 199, 0.4)";
+        ctx.fillStyle = isDark ? "rgba(14, 165, 233, 0.4)" : "rgba(2, 132, 199, 0.3)";
         ctx.fill();
 
-        particles.slice(i + 1).forEach((p2) => {
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
           const dx = p.x - p2.x;
           const dy = p.y - p2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
+          const distSq = dx * dx + dy * dy;
+          if (distSq < 10000) {
+            const dist = Math.sqrt(distSq);
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = isDark ? `rgba(14, 165, 233, ${0.15 - dist / 800})` : `rgba(2, 132, 199, ${0.1 - dist / 1200})`;
+            ctx.strokeStyle = isDark ? `rgba(14, 165, 233, ${0.12 - dist / 833})` : `rgba(2, 132, 199, ${0.08 - dist / 1250})`;
             ctx.stroke();
           }
-        });
+        }
 
         const mdx = p.x - mouse.x;
         const mdy = p.y - mouse.y;
-        const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
-        if (mDist < 150) {
+        const mDistSq = mdx * mdx + mdy * mdy;
+        if (mDistSq < 22500) {
+          const mDist = Math.sqrt(mDistSq);
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(mouse.x, mouse.y);
-          ctx.strokeStyle = isDark ? `rgba(14, 165, 233, ${0.3 - mDist / 500})` : `rgba(2, 132, 199, ${0.25 - mDist / 600})`;
+          ctx.strokeStyle = isDark ? `rgba(14, 165, 233, ${0.25 - mDist / 600})` : `rgba(2, 132, 199, ${0.2 - mDist / 750})`;
           ctx.stroke();
         }
       });
-
-      animationId = requestAnimationFrame(animate);
     };
 
     const handleMouse = (e: MouseEvent) => {
@@ -212,8 +270,7 @@ export default function ProjectsPage() {
     };
 
     resize();
-    createParticles();
-    animate();
+    animationId = requestAnimationFrame(animate);
     window.addEventListener("resize", resize);
     window.addEventListener("mousemove", handleMouse);
 
@@ -251,6 +308,112 @@ export default function ProjectsPage() {
     document.documentElement.setAttribute("data-theme", next);
   };
 
+  const renderProjectCard = (project: Project, i: number, isFeatured = false) => {
+    const stats = project.repoName ? githubStats[project.repoName] : null;
+
+    return (
+      <div
+        key={project.title}
+        className={`group glass glass-hover rounded-2xl overflow-hidden border-gradient hover-glow transition-all duration-300 card-spotlight glow-line scroll-reveal cursor-pointer ${isFeatured ? "col-span-full lg:col-span-2" : `scroll-delay-${Math.min(i + 1, 5)}`}`}
+        onMouseMove={handleCardSpotlight}
+        onClick={() => setSelectedProject(project)}
+      >
+        <div className={`${isFeatured ? "h-64 md:h-72" : "h-48"} bg-gradient-to-br ${project.color} relative overflow-hidden`}>
+          <img
+            src={project.image}
+            alt={project.title}
+            className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+          <div className="absolute top-4 left-4 flex gap-2">
+            <span className={`px-2.5 py-1 rounded-full text-xs font-medium backdrop-blur-sm border ${project.status === "active" ? "bg-green-500/20 text-green-300 border-green-500/30" : "bg-white/10 text-white/80 border-white/20"}`}>
+              {project.status === "active" ? "Active" : "Completed"}
+            </span>
+            {isFeatured && (
+              <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-accent/20 text-accent border border-accent/30 backdrop-blur-sm">
+                Featured
+              </span>
+            )}
+          </div>
+
+          <div className="absolute top-4 right-4 flex items-center gap-3 text-white/80 text-xs">
+            {stats && stats.stars > 0 && (
+              <span className="flex items-center gap-1 bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                {stats.stars}
+              </span>
+            )}
+            {stats && stats.forks > 0 && (
+              <span className="flex items-center gap-1 bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 3a3 3 0 0 0-3 3v3a3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zm0 2a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V6a1 1 0 0 1 1-1zm12 0a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V6a1 1 0 0 1 1-1zm-6 5v4h2v-4h-2zm-6 3a3 3 0 0 0-3 3v3a3 3 0 0 0 3 3 3 3 0 0 0 3-3v-3a3 3 0 0 0-3-3zm12-8a3 3 0 0 0-3 3v3a3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zm-6 11a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+                {stats.forks}
+              </span>
+            )}
+          </div>
+
+          <div className="absolute bottom-0 left-0 right-0 p-4">
+            <div className="flex flex-wrap gap-1.5">
+              {project.tech.slice(0, isFeatured ? 4 : 3).map((t) => (
+                <span key={t} className="px-2 py-0.5 rounded bg-black/40 backdrop-blur-sm text-xs text-white/90 border border-white/10">
+                  {t}
+                </span>
+              ))}
+              {project.tech.length > (isFeatured ? 4 : 3) && (
+                <span className="px-2 py-0.5 rounded bg-black/40 backdrop-blur-sm text-xs text-white/60">
+                  +{project.tech.length - (isFeatured ? 4 : 3)}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className={`${isFeatured ? "p-6" : "p-5"} relative z-10`}>
+          <div className="flex items-start justify-between gap-4 mb-2">
+            <h3 className={`${isFeatured ? "text-xl" : "text-lg"} font-semibold group-hover:text-accent transition-colors`}>
+              {project.title}
+            </h3>
+            <span className="text-xs text-muted shrink-0">{project.date}</span>
+          </div>
+          <p className={`text-sm text-muted leading-relaxed mb-4 ${isFeatured ? "line-clamp-3" : "line-clamp-2"}`}>
+            {project.description}
+          </p>
+
+          <div className="flex items-center gap-3">
+            {project.link && (
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1.5 text-sm text-accent hover:text-accent-light transition-colors hover-lift"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Live
+              </a>
+            )}
+            {project.github && (
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1.5 text-sm text-muted hover:text-foreground transition-colors hover-lift"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                </svg>
+                Code
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-background relative overflow-hidden noise">
       <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />
@@ -273,13 +436,13 @@ export default function ProjectsPage() {
       <div className="fixed bottom-20 right-20 w-80 h-80 bg-accent/10 rounded-full blur-3xl animate-orb-2 pointer-events-none" />
       <div className="fixed top-1/2 left-1/2 w-64 h-64 bg-accent/5 rounded-full blur-3xl animate-orb-3 pointer-events-none" />
 
-      <main className="relative z-10 w-full max-w-7xl mx-auto px-6 py-12">
-        <div className="mb-12 scroll-reveal">
+      <main className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="mb-8 sm:mb-12 scroll-reveal">
           <Link
             href="/"
             onMouseMove={handleMagnetic}
             onMouseLeave={handleMagneticLeave}
-            className="inline-flex items-center gap-2 text-sm text-muted hover:text-accent transition-all mb-8 group magnetic-btn hover-lift"
+            className="inline-flex items-center gap-2 text-sm text-muted hover:text-accent transition-all mb-6 sm:mb-8 group magnetic-btn hover-lift"
           >
             <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -287,10 +450,10 @@ export default function ProjectsPage() {
             Back to Home
           </Link>
 
-          <div className="flex items-end justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-shine mb-2">Projects</h1>
-              <p className="text-muted max-w-lg">
+              <h1 className="text-3xl sm:text-4xl font-bold text-shine mb-2">Projects</h1>
+              <p className="text-muted text-sm sm:text-base max-w-lg">
                 A collection of personal and university projects showcasing my skills in software development.
               </p>
             </div>
@@ -302,102 +465,42 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project, i) => (
-            <div
-              key={project.title}
-              className={`group glass glass-hover rounded-2xl overflow-hidden border-gradient hover-glow transition-all duration-300 card-spotlight glow-line scroll-reveal scroll-delay-${Math.min(i + 1, 5)} cursor-pointer`}
-              onMouseMove={handleCardSpotlight}
-              onClick={() => setSelectedProject(project)}
-            >
-              <div className={`h-48 bg-gradient-to-br ${project.color} relative overflow-hidden`}>
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="absolute inset-0 w-full h-full object-cover object-center"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.tech.slice(0, 3).map((t) => (
-                      <span key={t} className="px-2 py-0.5 rounded bg-black/40 backdrop-blur-sm text-xs text-white/90 border border-white/10">
-                        {t}
-                      </span>
-                    ))}
-                    {project.tech.length > 3 && (
-                      <span className="px-2 py-0.5 rounded bg-black/40 backdrop-blur-sm text-xs text-white/60">
-                        +{project.tech.length - 3}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
+        {featuredProject && (
+          <div className="mb-8 scroll-reveal scroll-delay-1">
+            {renderProjectCard(featuredProject, 0, true)}
+          </div>
+        )}
 
-              <div className="p-5 relative z-10">
-                <h3 className="text-lg font-semibold group-hover:text-accent transition-colors mb-2">
-                  {project.title}
-                </h3>
-                <p className="text-sm text-muted leading-relaxed mb-4">
-                  {project.description}
-                </p>
-
-                <div className="flex items-center gap-3">
-                  {project.link && (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-1.5 text-sm text-accent hover:text-accent-light transition-colors hover-lift"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                      Live
-                    </a>
-                  )}
-                  {project.github && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-1.5 text-sm text-muted hover:text-foreground transition-colors hover-lift"
-                    >
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                      </svg>
-                      Code
-                    </a>
-                  )}
-                  {!project.link && !project.github && (
-                    <span className="text-sm text-muted/60">Private Project</span>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          {otherProjects.map((project, i) => renderProjectCard(project, i))}
         </div>
 
-        <div className="mt-16 glass rounded-2xl p-8 text-center border-gradient border-beam scroll-reveal scroll-delay-5 card-spotlight hover-glow" onMouseMove={handleCardSpotlight}>
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-accent to-accent-light flex items-center justify-center text-2xl font-bold text-black animate-float animate-glow-pulse">
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
+        <div className="mt-12 sm:mt-16 glass rounded-2xl p-6 sm:p-8 border-gradient scroll-reveal scroll-delay-5 card-spotlight" onMouseMove={handleCardSpotlight}>
+          <h2 className="text-lg sm:text-xl font-semibold mb-6 text-center text-shine">Quick Stats</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
+              <div className="text-2xl sm:text-3xl font-bold text-accent mb-1">{projects.length}</div>
+              <div className="text-xs sm:text-sm text-muted">Projects</div>
+            </div>
+            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
+              <div className="text-2xl sm:text-3xl font-bold text-accent mb-1">
+                {[...new Set(projects.flatMap(p => p.tech))].length}
+              </div>
+              <div className="text-xs sm:text-sm text-muted">Technologies</div>
+            </div>
+            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
+              <div className="text-2xl sm:text-3xl font-bold text-accent mb-1">
+                {projects.filter(p => p.status === "active").length}
+              </div>
+              <div className="text-xs sm:text-sm text-muted">Active</div>
+            </div>
+            <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
+              <div className="text-2xl sm:text-3xl font-bold text-accent mb-1">
+                {Object.values(githubStats).reduce((sum, s) => sum + s.stars, 0)}
+              </div>
+              <div className="text-xs sm:text-sm text-muted">GitHub Stars</div>
+            </div>
           </div>
-          <h2 className="text-xl font-semibold mb-2 text-shine">Want to collaborate?</h2>
-          <p className="text-muted mb-6">I&apos;m always open to discussing new projects and opportunities.</p>
-          <a
-            href="mailto:millensh@outlook.com"
-            onMouseMove={handleMagnetic}
-            onMouseLeave={handleMagneticLeave}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent text-black font-medium hover:bg-accent-light transition-all magnetic-btn hover-lift"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            Get in Touch
-          </a>
         </div>
       </main>
 
@@ -427,7 +530,7 @@ export default function ProjectsPage() {
       </div>
 
       {selectedProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-6" onClick={() => setSelectedProject(null)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" onClick={() => setSelectedProject(null)}>
           <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" />
           <div
             className="relative rounded-2xl w-full max-w-2xl animate-fade-in-scale max-h-[90vh] overflow-auto smooth-scroll modal-content"
@@ -442,15 +545,42 @@ export default function ProjectsPage() {
               </svg>
             </button>
 
-            <div className={`h-56 bg-gradient-to-br ${selectedProject.color} relative overflow-hidden rounded-t-2xl`}>
+            <div className={`h-48 sm:h-56 bg-gradient-to-br ${selectedProject.color} relative overflow-hidden rounded-t-2xl`}>
               <img
                 src={selectedProject.image}
                 alt={selectedProject.title}
                 className="absolute inset-0 w-full h-full object-cover object-center"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h2 className="text-2xl font-bold text-white mb-2">{selectedProject.title}</h2>
+
+              <div className="absolute top-4 left-4 flex gap-2">
+                <span className={`px-2.5 py-1 rounded-full text-xs font-medium backdrop-blur-sm border ${selectedProject.status === "active" ? "bg-green-500/20 text-green-300 border-green-500/30" : "bg-white/10 text-white/80 border-white/20"}`}>
+                  {selectedProject.status === "active" ? "Active" : "Completed"}
+                </span>
+              </div>
+
+              {selectedProject.repoName && githubStats[selectedProject.repoName] && (
+                <div className="absolute top-4 right-12 flex items-center gap-3 text-white/80 text-xs">
+                  {githubStats[selectedProject.repoName].stars > 0 && (
+                    <span className="flex items-center gap-1 bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">
+                      <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                      {githubStats[selectedProject.repoName].stars}
+                    </span>
+                  )}
+                  {githubStats[selectedProject.repoName].forks > 0 && (
+                    <span className="flex items-center gap-1 bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">
+                      <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 3a3 3 0 0 0-3 3v3a3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zm0 2a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V6a1 1 0 0 1 1-1zm12 0a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V6a1 1 0 0 1 1-1zm-6 5v4h2v-4h-2zm-6 3a3 3 0 0 0-3 3v3a3 3 0 0 0 3 3 3 3 0 0 0 3-3v-3a3 3 0 0 0-3-3zm12-8a3 3 0 0 0-3 3v3a3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zm-6 11a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+                      {githubStats[selectedProject.repoName].forks}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <h2 className="text-xl sm:text-2xl font-bold text-white">{selectedProject.title}</h2>
+                  <span className="text-xs text-white/60">{selectedProject.date}</span>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {selectedProject.tech.map((t) => (
                     <span key={t} className="px-2.5 py-1 rounded-lg bg-white/20 backdrop-blur-sm text-xs text-white border border-white/20">
@@ -461,7 +591,7 @@ export default function ProjectsPage() {
               </div>
             </div>
 
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               <p className="text-muted leading-relaxed mb-6">{selectedProject.longDescription}</p>
 
               <div className="mb-6">
@@ -476,7 +606,7 @@ export default function ProjectsPage() {
                 </ul>
               </div>
 
-              <div className="flex gap-3 pt-4 border-t border-white/10">
+              <div className="flex flex-wrap gap-3 pt-4 border-t border-white/10">
                 {selectedProject.link && (
                   <a
                     href={selectedProject.link}

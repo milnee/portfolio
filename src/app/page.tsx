@@ -379,36 +379,48 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="glass rounded-2xl p-6 border-gradient scroll-reveal scroll-delay-4 border-beam">
-              <div className="flex justify-between items-center mb-5">
-                <h2 className="text-xs font-medium text-muted uppercase tracking-widest">Projects</h2>
-                <Link
-                  href="/projects"
-                  onMouseMove={handleMagnetic}
-                  onMouseLeave={handleMagneticLeave}
-                  className="text-sm text-accent hover:underline underline-offset-4 hover-lift magnetic-btn"
-                >
-                  View All
-                </Link>
+            <Link
+              href="/projects"
+              className="group glass rounded-2xl p-6 border-gradient scroll-reveal scroll-delay-4 border-beam block hover:border-accent/40 transition-all card-spotlight relative overflow-hidden"
+              onMouseMove={handleCardSpotlight}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-accent/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative z-10">
+                <div className="flex justify-between items-center mb-5">
+                  <h2 className="text-xs font-medium text-muted uppercase tracking-widest">Projects</h2>
+                  <span className="flex items-center gap-2 text-sm text-accent group-hover:gap-3 transition-all">
+                    View All
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </span>
+                </div>
+                <div className="flex items-center gap-6">
+                  <div className="flex -space-x-3">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 border-2 border-background flex items-center justify-center shadow-lg">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" /></svg>
+                    </div>
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 border-2 border-background flex items-center justify-center shadow-lg">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>
+                    </div>
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 border-2 border-background flex items-center justify-center shadow-lg">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-lg group-hover:text-accent transition-colors">4 Projects</p>
+                    <p className="text-sm text-muted">Minecraft plugins, FiveM scripts, web apps & more</p>
+                  </div>
+                  <div className="hidden sm:flex flex-wrap gap-2 max-w-[200px]">
+                    {["Java", "Lua", "TypeScript", "React"].map((tech) => (
+                      <span key={tech} className="px-2 py-1 rounded-md bg-white/5 text-xs text-muted">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div className="grid sm:grid-cols-3 gap-4">
-                <button onClick={() => setModal("minecraft")} onMouseMove={handleMagnetic} onMouseLeave={handleMagneticLeave} className="p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-accent/30 hover:bg-white/[0.04] transition-all text-left group hover-lift magnetic-btn">
-                  <p className="font-medium group-hover:text-accent transition-colors">Minecraft Plugins</p>
-                  <p className="text-xs text-muted mt-1 font-mono">Java, MySQL, MongoDB</p>
-                  <p className="text-xs text-muted/60 mt-3 leading-relaxed">Custom server plugins for gameplay enhancement</p>
-                </button>
-                <button onClick={() => setModal("fivem")} onMouseMove={handleMagnetic} onMouseLeave={handleMagneticLeave} className="p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-accent/30 hover:bg-white/[0.04] transition-all text-left group hover-lift magnetic-btn">
-                  <p className="font-medium group-hover:text-accent transition-colors">FiveM Scripts</p>
-                  <p className="text-xs text-muted mt-1 font-mono">Lua, QBCore Framework</p>
-                  <p className="text-xs text-muted/60 mt-3 leading-relaxed">Server scripts with commands & permissions</p>
-                </button>
-                <button onClick={() => setModal("webdev")} onMouseMove={handleMagnetic} onMouseLeave={handleMagneticLeave} className="p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-accent/30 hover:bg-white/[0.04] transition-all text-left group hover-lift magnetic-btn">
-                  <p className="font-medium group-hover:text-accent transition-colors">Web Development</p>
-                  <p className="text-xs text-muted mt-1 font-mono">HTML, CSS</p>
-                  <p className="text-xs text-muted/60 mt-3 leading-relaxed">Responsive websites with modern design</p>
-                </button>
-              </div>
-            </div>
+            </Link>
 
             <div className="grid sm:grid-cols-3 gap-4">
               <div className="sm:col-span-2 glass glass-hover rounded-2xl p-5 scroll-reveal scroll-delay-5 hover-glow card-spotlight" onMouseMove={handleCardSpotlight}>
