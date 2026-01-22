@@ -107,6 +107,7 @@ export default function ProjectsPage() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [githubStats, setGithubStats] = useState<Record<string, { stars: number; forks: number }>>({});
+  const [loadingStats, setLoadingStats] = useState(true);
   const spotlightRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -115,6 +116,7 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     const fetchGithubStats = async () => {
+      setLoadingStats(true);
       const stats: Record<string, { stars: number; forks: number }> = {};
       for (const project of projects) {
         if (project.repoName) {
@@ -133,6 +135,7 @@ export default function ProjectsPage() {
         }
       }
       setGithubStats(stats);
+      setLoadingStats(false);
     };
     fetchGithubStats();
   }, []);
@@ -303,13 +306,18 @@ export default function ProjectsPage() {
           </div>
 
           <div className="absolute top-4 right-4 flex items-center gap-3 text-white/80 text-xs">
-            {stats && stats.stars > 0 && (
+            {project.repoName && loadingStats && (
+              <span className="flex items-center gap-1 bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">
+                <div className="w-8 h-3 bg-white/20 rounded animate-pulse" />
+              </span>
+            )}
+            {!loadingStats && stats && stats.stars > 0 && (
               <span className="flex items-center gap-1 bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                 {stats.stars}
               </span>
             )}
-            {stats && stats.forks > 0 && (
+            {!loadingStats && stats && stats.forks > 0 && (
               <span className="flex items-center gap-1 bg-black/30 backdrop-blur-sm px-2 py-1 rounded-full">
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 3a3 3 0 0 0-3 3v3a3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zm0 2a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V6a1 1 0 0 1 1-1zm12 0a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0V6a1 1 0 0 1 1-1zm-6 5v4h2v-4h-2zm-6 3a3 3 0 0 0-3 3v3a3 3 0 0 0 3 3 3 3 0 0 0 3-3v-3a3 3 0 0 0-3-3zm12-8a3 3 0 0 0-3 3v3a3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3zm-6 11a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
                 {stats.forks}
@@ -461,7 +469,11 @@ export default function ProjectsPage() {
             </div>
             <div className="text-center p-4 rounded-xl bg-white/5 border border-white/10">
               <div className="text-2xl sm:text-3xl font-bold text-accent mb-1">
-                {Object.values(githubStats).reduce((sum, s) => sum + s.stars, 0)}
+                {loadingStats ? (
+                  <div className="h-8 w-8 mx-auto bg-white/10 rounded animate-pulse" />
+                ) : (
+                  Object.values(githubStats).reduce((sum, s) => sum + s.stars, 0)
+                )}
               </div>
               <div className="text-xs sm:text-sm text-muted">GitHub Stars</div>
             </div>

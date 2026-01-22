@@ -214,7 +214,7 @@ export default function Home() {
                 <p className="text-accent font-mono text-sm typing-text">Software Developer</p>
               </div>
               <div className="h-px w-12 mx-auto my-4 bg-gradient-to-r from-transparent via-accent to-transparent animate-gradient" />
-              <div className="flex gap-3 justify-center">
+              <div className="flex gap-3 justify-center mb-4">
                 <button
                   onClick={() => setModal("about")}
                   onMouseMove={handleMagnetic}
@@ -234,6 +234,16 @@ export default function Home() {
                   View CV
                 </button>
               </div>
+              <a
+                href="/cv.pdf"
+                download="Millen_Singh_CV.pdf"
+                onMouseMove={handleMagnetic}
+                onMouseLeave={handleMagneticLeave}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-accent text-black font-medium text-sm hover:bg-accent-light transition-all magnetic-btn"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Download CV
+              </a>
             </div>
 
             <div className="glass glass-hover rounded-2xl p-6 scroll-reveal scroll-delay-1 hover-glow card-spotlight" onMouseMove={handleCardSpotlight}>
@@ -438,9 +448,17 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="glass glass-hover rounded-2xl p-5 flex flex-col justify-center items-center text-center border-gradient scroll-reveal scroll-delay-5 hover-glow animate-glow-pulse card-spotlight" onMouseMove={handleCardSpotlight}>
-                <p className="text-xs text-muted uppercase tracking-wider">Seeking Placement</p>
-                <p className="text-accent font-semibold text-lg mt-1">September 2026</p>
+              <div className="relative glass glass-hover rounded-2xl p-5 flex flex-col justify-center items-center text-center border-gradient scroll-reveal scroll-delay-5 hover-glow card-spotlight overflow-hidden" onMouseMove={handleCardSpotlight}>
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-accent/10" />
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 via-accent to-green-500 animate-gradient" />
+                <div className="relative">
+                  <div className="flex items-center gap-2 justify-center mb-1">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <p className="text-xs text-green-400 uppercase tracking-wider font-medium">Open to Work</p>
+                  </div>
+                  <p className="text-foreground font-semibold text-lg">Seeking Placement</p>
+                  <p className="text-accent font-bold text-xl mt-1">September 2026</p>
+                </div>
               </div>
             </div>
           </section>
