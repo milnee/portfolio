@@ -469,10 +469,10 @@ export default function Home() {
       </div>
 
       {modal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-6" onClick={() => setModal(null)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" onClick={() => setModal(null)}>
           <div className="absolute inset-0 bg-black/95" />
           <div
-            className={`relative rounded-2xl p-8 w-full animate-fade-in-scale max-h-[90vh] overflow-auto smooth-scroll modal-content ${modal === "cv" ? "max-w-4xl" : modal === "projects" ? "max-w-3xl" : "max-w-lg"}`}
+            className={`relative rounded-2xl p-5 sm:p-8 w-full animate-fade-in-scale max-h-[90vh] overflow-auto smooth-scroll modal-content ${modal === "cv" ? "max-w-4xl" : modal === "projects" ? "max-w-3xl" : "max-w-lg"}`}
             onClick={(e) => e.stopPropagation()}
           >
             <button onClick={() => setModal(null)} className="absolute top-4 right-4 w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 hover:rotate-90 flex items-center justify-center text-muted hover:text-foreground transition-all">
@@ -657,24 +657,33 @@ export default function Home() {
 
             {modal === "cv" && (
               <div className="max-w-none -m-2">
-                <div className="bg-gradient-to-br from-accent/20 via-accent/5 to-transparent rounded-xl p-6 mb-6">
-                  <div className="flex items-center gap-6">
-                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-accent to-accent-light flex items-center justify-center text-2xl font-bold text-black shrink-0">
-                      MS
+                <div className="bg-gradient-to-br from-accent/20 via-accent/5 to-transparent rounded-xl p-4 sm:p-6 mb-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+                    <div className="flex items-center gap-4 sm:block">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-accent to-accent-light flex items-center justify-center text-xl sm:text-2xl font-bold text-black shrink-0">
+                        MS
+                      </div>
+                      <div className="sm:hidden">
+                        <h2 className="text-xl font-bold">Millen Singh</h2>
+                        <p className="text-accent font-mono text-sm">Software Developer</p>
+                      </div>
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 hidden sm:block">
                       <h2 className="text-2xl font-bold">Millen Singh</h2>
                       <p className="text-accent font-mono text-sm mt-1">Software Developer</p>
                       <p className="text-muted text-sm mt-2 leading-relaxed">
                         Second-year Computer Science student seeking a software engineering placement for September 2026.
                       </p>
                     </div>
-                    <div className="text-right text-sm space-y-2 shrink-0">
-                      <a href="mailto:millensh@outlook.com" className="flex items-center gap-2 text-muted hover:text-accent transition-colors justify-end">
-                        <span>millensh@outlook.com</span>
+                    <p className="text-muted text-sm leading-relaxed sm:hidden">
+                      Second-year Computer Science student seeking a software engineering placement for September 2026.
+                    </p>
+                    <div className="flex sm:flex-col items-center sm:items-end gap-3 sm:gap-2 sm:text-right text-sm shrink-0">
+                      <a href="mailto:millensh@outlook.com" className="flex items-center gap-2 text-muted hover:text-accent transition-colors">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        <span className="hidden sm:inline">millensh@outlook.com</span>
                       </a>
-                      <div className="flex gap-3 justify-end pt-1">
+                      <div className="flex gap-2">
                         <a href="https://linkedin.com/in/singhmillen" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-[#0A66C2]/20 flex items-center justify-center text-[#0A66C2] hover:bg-[#0A66C2]/30 transition-all">
                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                         </a>
@@ -686,8 +695,8 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-6">
-                  <div className="col-span-2 space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="md:col-span-2 space-y-5">
                     <section>
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-6 h-6 rounded bg-accent/20 flex items-center justify-center">
@@ -738,7 +747,7 @@ export default function Home() {
                         </div>
                         <h3 className="text-sm font-semibold uppercase tracking-widest">References</h3>
                       </div>
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div className="rounded-xl bg-white/[0.02] border border-white/5 p-3 text-center">
                           <p className="font-medium text-sm">Mairin Nicell</p>
                           <p className="text-xs text-muted">Senior Lecturer</p>
