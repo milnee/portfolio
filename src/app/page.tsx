@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Link from "next/link";
 
 type Modal = "education" | "experience" | "projects" | "about" | "minecraft" | "fivem" | "webdev" | "cv" | null;
 
@@ -381,14 +382,14 @@ export default function Home() {
             <div className="glass rounded-2xl p-6 border-gradient scroll-reveal scroll-delay-4 border-beam">
               <div className="flex justify-between items-center mb-5">
                 <h2 className="text-xs font-medium text-muted uppercase tracking-widest">Projects</h2>
-                <button
-                  onClick={() => setModal("projects")}
+                <Link
+                  href="/projects"
                   onMouseMove={handleMagnetic}
                   onMouseLeave={handleMagneticLeave}
                   className="text-sm text-accent hover:underline underline-offset-4 hover-lift magnetic-btn"
                 >
                   View All
-                </button>
+                </Link>
               </div>
               <div className="grid sm:grid-cols-3 gap-4">
                 <button onClick={() => setModal("minecraft")} onMouseMove={handleMagnetic} onMouseLeave={handleMagneticLeave} className="p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-accent/30 hover:bg-white/[0.04] transition-all text-left group hover-lift magnetic-btn">
