@@ -305,7 +305,7 @@ export default function Home() {
                 onClick={() => setModal("education")}
                 onMouseMove={handleMagnetic}
                 onMouseLeave={handleMagneticLeave}
-                className="glass glass-hover rounded-2xl p-5 text-left glow-line scroll-reveal scroll-delay-1 hover-glow card-3d magnetic-btn"
+                className="glass glass-hover rounded-2xl p-5 text-left glow-line scroll-reveal scroll-delay-1 hover-glow card-3d magnetic-btn group"
               >
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent animate-bounce-subtle">
@@ -316,13 +316,17 @@ export default function Home() {
                 <p className="font-medium">BSc Computer Science</p>
                 <p className="text-sm text-muted">Ulster University</p>
                 <p className="text-xs text-accent mt-2 font-mono">2024 - 2028 • 63.5%</p>
+                <div className="flex items-center gap-1 mt-3 text-xs text-muted group-hover:text-accent transition-colors">
+                  <span>View details</span>
+                  <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg>
+                </div>
               </button>
 
               <button
                 onClick={() => setModal("experience")}
                 onMouseMove={handleMagnetic}
                 onMouseLeave={handleMagneticLeave}
-                className="glass glass-hover rounded-2xl p-5 text-left glow-line scroll-reveal scroll-delay-2 hover-glow card-3d magnetic-btn"
+                className="glass glass-hover rounded-2xl p-5 text-left glow-line scroll-reveal scroll-delay-2 hover-glow card-3d magnetic-btn group"
               >
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent animate-bounce-subtle stagger-2">
@@ -333,6 +337,10 @@ export default function Home() {
                 <p className="font-medium">Grow Intern</p>
                 <p className="text-sm text-muted">Anywho LTD</p>
                 <p className="text-xs text-accent mt-2 font-mono">Jul 2024 - Jul 2025</p>
+                <div className="flex items-center gap-1 mt-3 text-xs text-muted group-hover:text-accent transition-colors">
+                  <span>View details</span>
+                  <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg>
+                </div>
               </button>
 
               <a
