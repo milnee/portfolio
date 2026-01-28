@@ -2,7 +2,7 @@
 
 <img src="./public/favicon.svg" alt="Logo" width="80" height="80">
 
-# Millen Singh
+# Millen
 
 **Software Developer** · Northern Ireland
 

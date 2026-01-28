@@ -13,18 +13,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Millen Singh",
+  title: "Millen",
   icons: {
     icon: "/favicon.svg",
   },
   description: "Second-year Computer Science student at Ulster University seeking placement opportunities. Passionate about building web applications with React, Next.js, and TypeScript.",
-  keywords: ["Millen Singh", "Software Developer", "Portfolio", "Ulster University", "React", "Next.js", "TypeScript", "Web Developer"],
-  authors: [{ name: "Millen Singh" }],
+  keywords: ["Millen", "Software Developer", "Portfolio", "Ulster University", "React", "Next.js", "TypeScript", "Web Developer"],
+  authors: [{ name: "Millen" }],
   openGraph: {
-    title: "Millen Singh",
+    title: "Millen",
     description: "Software Developer · Northern Ireland",
     url: "https://millen.sh",
-    siteName: "Millen Singh",
+    siteName: "Millen",
     locale: "en_GB",
     type: "website",
     images: [
@@ -32,13 +32,13 @@ export const metadata: Metadata = {
         url: "https://millen.sh/preview.png",
         width: 1200,
         height: 630,
-        alt: "Millen Singh Portfolio",
+        alt: "Millen Portfolio",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Millen Singh",
+    title: "Millen",
     description: "Software Developer · Northern Ireland",
     images: ["https://millen.sh/preview.png"],
   },

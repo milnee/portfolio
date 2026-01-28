@@ -209,7 +209,7 @@ export default function Home() {
               <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-accent to-accent-light flex items-center justify-center text-3xl font-bold text-black animate-float animate-glow-pulse">
                 MS
               </div>
-              <h1 className="text-xl font-semibold tracking-tight text-shine">Millen Singh</h1>
+              <h1 className="text-xl font-semibold tracking-tight text-shine">Millen</h1>
               <div className="typing-container mt-1">
                 <p className="text-accent font-mono text-sm typing-text">Software Developer</p>
               </div>
@@ -236,7 +236,7 @@ export default function Home() {
               </div>
               <a
                 href="/cv.pdf"
-                download="Millen_Singh_CV.pdf"
+                download="Millen_CV.pdf"
                 onMouseMove={handleMagnetic}
                 onMouseLeave={handleMagneticLeave}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-accent text-black font-medium text-sm hover:bg-accent-light transition-all magnetic-btn"
@@ -690,12 +690,12 @@ export default function Home() {
                         MS
                       </div>
                       <div className="sm:hidden">
-                        <h2 className="text-xl font-bold">Millen Singh</h2>
+                        <h2 className="text-xl font-bold">Millen</h2>
                         <p className="text-accent font-mono text-sm">Software Developer</p>
                       </div>
                     </div>
                     <div className="flex-1 hidden sm:block">
-                      <h2 className="text-2xl font-bold">Millen Singh</h2>
+                      <h2 className="text-2xl font-bold">Millen</h2>
                       <p className="text-accent font-mono text-sm mt-1">Software Developer</p>
                       <p className="text-muted text-sm mt-2 leading-relaxed">
                         Second-year Computer Science student seeking a software engineering placement for September 2026.
@@ -911,7 +911,7 @@ export default function Home() {
                 <div className="mt-6 flex justify-end">
                   <a
                     href="/cv.pdf"
-                    download="Millen_Singh_CV.pdf"
+                    download="Millen_CV.pdf"
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent text-black font-medium text-sm hover:bg-accent-light transition-all"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
