@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -13,39 +8,28 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Millen",
-  icons: {
-    icon: "/favicon.svg",
-  },
-  description: "Second-year Computer Science student at Ulster University seeking placement opportunities. Passionate about building web applications with React, Next.js, and TypeScript.",
-  keywords: ["Millen", "Software Developer", "Portfolio", "Ulster University", "React", "Next.js", "TypeScript", "Web Developer"],
-  authors: [{ name: "Millen" }],
+  title: { default: "millen", template: "%s · millen" },
+  description: "computer science student and software developer from northern ireland",
+  keywords: ["millen", "software developer", "portfolio", "ulster university", "northern ireland"],
+  authors: [{ name: "millen" }],
+  creator: "millen",
+  metadataBase: new URL("https://millen.sh"),
   openGraph: {
-    title: "Millen",
-    description: "Software Developer · Northern Ireland",
-    url: "https://millen.sh",
-    siteName: "Millen",
-    locale: "en_GB",
     type: "website",
-    images: [
-      {
-        url: "https://millen.sh/preview.png",
-        width: 1200,
-        height: 630,
-        alt: "Millen Portfolio",
-      },
-    ],
+    locale: "en_GB",
+    url: "https://millen.sh",
+    siteName: "millen",
+    title: "millen",
+    description: "software developer · northern ireland",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "millen" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Millen",
-    description: "Software Developer · Northern Ireland",
-    images: ["https://millen.sh/preview.png"],
+    title: "millen",
+    description: "software developer · northern ireland",
+    images: ["/og.png"],
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
 };
 
 export default function RootLayout({
@@ -55,9 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
-      >
+      <body className={`${geistMono.variable} font-mono antialiased`}>
         {children}
       </body>
     </html>
