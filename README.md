@@ -1,5 +1,7 @@
 # millen.sh
 
+![preview](public/preview.png)
+
 minimal portfolio built with next.js 16
 
 ## stack
